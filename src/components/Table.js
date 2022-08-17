@@ -7,9 +7,15 @@ function Table() {
   const [comparisonFilter, setComparisonFilter] = useState('maior que');
   const [valueFilter, setValueFilter] = useState('0');
   const [numberFilter, setNumberFilter] = useState([]);
-  const { planetsList } = useContext(StarWarsContext);
+  const {
+    planetsList,
+    availableFilters,
+    setAvailableFilters,
+  } = useContext(StarWarsContext);
 
   const onButtonFilterClick = () => {
+    setAvailableFilters((prevState) => prevState
+      .filter((available) => available !== columnFilter));
     setNumberFilter((prevState) => [...prevState, {
       column_filter: columnFilter,
       comparison_filter: comparisonFilter,
@@ -54,16 +60,9 @@ function Table() {
             onChange={ ({ target }) => setColumnFilter(target.value) }
             data-testid="column-filter"
           >
-            { numberFilter.columnFilter !== 'population'
-            && <option value="population">population</option>}
-            { numberFilter.columnFilter !== 'orbital_period'
-            && <option value="orbital_period">orbital_period</option> }
-            { numberFilter.columnFilter !== 'diameter'
-            && <option value="diameter">diameter</option> }
-            { numberFilter.columnFilter !== 'rotation_period'
-            && <option value="rotation_period">rotation_period</option> }
-            { numberFilter.columnFilter !== 'surface_water'
-            && <option value="surface_water">surface_water</option> }
+            {availableFilters
+              .map((available) => (
+                <option key={ available } value={ available }>{available}</option>))}
           </select>
         </label>
         <label htmlFor="comparison-filter">
