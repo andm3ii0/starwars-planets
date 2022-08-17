@@ -6,29 +6,29 @@ function Table() {
   const [columnFilter, setColumnFilter] = useState('population');
   const [comparisonFilter, setComparisonFilter] = useState('maior que');
   const [valueFilter, setValueFilter] = useState('0');
-  const [numberFilter, setNumberFilter] = useState({});
+  const [numberFilter, setNumberFilter] = useState([]);
   const { planetsList } = useContext(StarWarsContext);
 
   const onButtonFilterClick = () => {
-    setNumberFilter({
-      columnFilter,
-      comparisonFilter,
-      valueFilter,
-    });
+    setNumberFilter((prevState) => [...prevState, {
+      column_filter: columnFilter,
+      comparison_filter: comparisonFilter,
+      value_filter: valueFilter,
+    }]);
   };
 
   const filterByNumber = (obj1, obj2) => {
     if (JSON.stringify(obj2) === '{}') {
       return true;
     }
-    if (obj2.comparisonFilter === 'maior que') {
-      return parseInt(obj1[columnFilter], 10) > parseInt(valueFilter, 10);
+    if (obj2.comparison_filter === 'maior que') {
+      return parseInt(obj1[obj2.column_filter], 10) > parseInt(obj2.value_filter, 10);
     }
-    if (obj2.comparisonFilter === 'menor que') {
-      return parseInt(obj1[columnFilter], 10) < parseInt(valueFilter, 10);
+    if (obj2.comparison_filter === 'menor que') {
+      return parseInt(obj1[obj2.column_filter], 10) < parseInt(obj2.value_filter, 10);
     }
-    if (obj2.comparisonFilter === 'igual a') {
-      return parseInt(obj1[columnFilter], 10) === parseInt(valueFilter, 10);
+    if (obj2.comparison_filter === 'igual a') {
+      return parseInt(obj1[obj2.column_filter], 10) === parseInt(obj2.value_filter, 10);
     }
   };
 
@@ -111,7 +111,8 @@ function Table() {
         </thead>
         <tbody>
           {planetsList
-            .filter((planet) => filterByNumber(planet, numberFilter))
+            .filter((planet) => !numberFilter
+              .map((filterObj) => filterByNumber(planet, filterObj)).includes(false))
             .filter((planet) => planet.name.toLowerCase().includes(filter.toLowerCase()))
             .map((planet) => (
               <tr key={ planet.diameter }>

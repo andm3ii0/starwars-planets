@@ -21,7 +21,6 @@ function StarWarsProvider({ children }) {
   const obj = {
     planetsList,
   };
-  console.log(children);
   return (
     <StarWarsContext.Provider value={ obj }>
       { children }
