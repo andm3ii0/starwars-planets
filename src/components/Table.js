@@ -21,6 +21,22 @@ function Table() {
       comparison_filter: comparisonFilter,
       value_filter: valueFilter,
     }]);
+    // setColumnFilter([availableFilters[0]]);
+  };
+
+  const removeAllFilters = () => {
+    setNumberFilter([]);
+    setAvailableFilters(
+      ['population', 'orbital_period', 'diameter', 'rotation_period', 'surface_water'],
+    );
+  };
+
+  const onRemoveFilterButtonClick = ({ target }) => {
+    const { value } = target;
+    console.log(value);
+    setNumberFilter((prevState) => prevState
+      .filter((state) => state.column_filter !== value));
+    setAvailableFilters((prevState) => [...prevState, value]);
   };
 
   const filterByNumber = (obj1, obj2) => {
@@ -61,8 +77,14 @@ function Table() {
             data-testid="column-filter"
           >
             {availableFilters
-              .map((available) => (
-                <option key={ available } value={ available }>{available}</option>))}
+              .map((availableFilter, index) => (
+                <option
+                  key={ `${availableFilter}_${index}` }
+                  value={ availableFilter }
+                >
+                  {availableFilter}
+
+                </option>))}
           </select>
         </label>
         <label htmlFor="comparison-filter">
@@ -90,6 +112,35 @@ function Table() {
           Filtrar
         </button>
       </div>
+      <div>
+        <button
+          type="button"
+          data-testid="button-remove-filters"
+          onClick={ removeAllFilters }
+        >
+          Remover tudo
+        </button>
+        {numberFilter.map((filterObj) => (
+          <p
+            data-testid="filter"
+            key={ `${filterObj.column_filter}_${filterObj.value_filter}` }
+          >
+            {filterObj.column_filter}
+            {' '}
+            {filterObj.comparison_filter}
+            {' '}
+            {filterObj.value_filter}
+            {' '}
+            <button
+              type="button"
+              value={ filterObj.column_filter }
+              onClick={ onRemoveFilterButtonClick }
+            >
+              Remover
+            </button>
+          </p>
+        ))}
+      </div>
       <table>
         <thead>
           <tr>
@@ -114,7 +165,7 @@ function Table() {
               .map((filterObj) => filterByNumber(planet, filterObj)).includes(false))
             .filter((planet) => planet.name.toLowerCase().includes(filter.toLowerCase()))
             .map((planet) => (
-              <tr key={ planet.diameter }>
+              <tr key={ planet.name }>
                 <td>{planet.name}</td>
                 <td>{planet.rotation_period}</td>
                 <td>{planet.orbital_period}</td>

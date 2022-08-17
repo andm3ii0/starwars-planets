@@ -5,7 +5,7 @@ import StarWarsContext from './StarWarsContext';
 function StarWarsProvider({ children }) {
   const [planetsList, setPlanetList] = useState([]);
   const [availableFilters, setAvailableFilters] = useState(
-    ['population', 'orbital_period', 'diameter', 'rotation_period', 'surface_water'],
+    ['orbital_period', 'diameter', 'rotation_period', 'surface_water', 'population'],
   );
 
   useEffect(() => {
