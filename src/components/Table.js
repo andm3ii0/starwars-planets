@@ -79,6 +79,7 @@ function Table() {
             {availableFilters
               .map((availableFilter, index) => (
                 <option
+                  data-testid="column-filter-option"
                   key={ `${availableFilter}_${index}` }
                   value={ availableFilter }
                 >
@@ -141,9 +142,9 @@ function Table() {
           </p>
         ))}
       </div>
-      <table>
+      <table data-testid="table">
         <thead>
-          <tr>
+          <tr name="tr">
             <th>Name</th>
             <th>Rotation Period</th>
             <th>Orbital Period</th>
